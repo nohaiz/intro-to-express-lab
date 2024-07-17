@@ -54,37 +54,21 @@ const shoes = [
 ];
 
 app.get('/shoes', (req, res) => {
-    
-    let minShoes = [];
-    let maxShoes = [];
-    let shoeType = [];
+
+    let items = [];
     shoes.forEach((shoe) => {
-        if (req.query.price < shoe.price) {
-            //Min price
-            minShoes.push(shoe.price)
+        if (req.query['min-price'] <= shoe.price) {
+            items.push({shoe : shoe.name, price: shoe.price});
         }
-        if (req.query.price > shoe.price) {
-            //Max price
-            maxShoes.push(shoe.price)
+        if (req.query['max-price'] >= shoe.price) {
+            items.push({shoe : shoe.name, price: shoe.price});
         }
-        if (req.query.type === shoe.type){
-            shoeType.push(shoe);
+        if (req.query.type === shoe.type) {
+            items.push({shoe: shoe.name, type: shoe.type});
         }
-    })
-
-    let response = '';
-    if (minShoes.length > 0) {
-        response += `<strong>Min-price shoes</strong>: ${minShoes}\n`;
-    }
-    if (maxShoes.length > 0) {
-        response += `<strong>Max-price shoes</strong>: ${maxShoes}`;
-    }
-    if (shoeType.length > 0) {
-        response += `Shoes of type '${req.query.type}': ${shoeType.map(shoe => shoe.name).join(', ')}`;
-    }
-
-    res.send(response.trim());
-})
+    });
+    res.send(items);
+});
 
 //This is a must.
 app.listen(3000, ()=> {
