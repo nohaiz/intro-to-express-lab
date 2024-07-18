@@ -53,22 +53,28 @@ const shoes = [
     { name: "Fifty-Inch Heels", price: 175, type: "heel" }
 ];
 
-app.get('/shoes', (req, res) => {
-
-    let items = [];
-    shoes.forEach((shoe) => {
-        if (req.query['min-price'] <= shoe.price) {
-            items.push({shoe : shoe.name, price: shoe.price});
-        }
-        if (req.query['max-price'] >= shoe.price) {
-            items.push({shoe : shoe.name, price: shoe.price});
-        }
-        if (req.query.type === shoe.type) {
-            items.push({shoe: shoe.name, type: shoe.type});
-        }
-    });
-    res.send(items);
+app.get('/shoes',(req,res)=>{
+    let shoes = [
+        { name: "Birkenstocks", price: 50, type: "sandal" },
+        { name: "Air Jordans", price: 500, type: "sneaker" },
+        { name: "Air Mahomeses", price: 501, type: "sneaker" },
+        { name: "Utility Boots", price: 20, type: "boot" },
+        { name: "Velcro Sandals", price: 15, type: "sandal" },
+        { name: "Jet Boots", price: 1000, type: "boot" },
+        { name: "Fifty-Inch Heels", price: 175, type: "heel" }
+    ];
+    if(req.query.hasOwnProperty('min-price')){
+        shoes = shoes.filter(shoe => shoe.price >= Number(req.query['min-price']));
+    }
+    if(req.query.hasOwnProperty('max-price')){
+        shoes = shoes.filter(shoe => shoe.price <= Number(req.query['max-price']));
+    }
+    if(req.query.hasOwnProperty('type')){
+        shoes = shoes.filter(shoe => shoe.type === req.query['type']);
+    }
+    res.send(shoes);
 });
+
 
 //This is a must.
 app.listen(3000, ()=> {
